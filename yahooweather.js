@@ -4,61 +4,74 @@ http://darkskyapp.github.io/skycons/
 */
 var skycons = new Skycons();
   // on Android, a nasty hack is needed: {"resizeClear": true}
-
   // you can add a canvas by it's ID...
-  skycons.add("today", Skycons.PARTLY_CLOUDY_DAY);
-  skycons.add("day1", Skycons.CLEAR_DAY);
-  skycons.add("day2", Skycons.CLOUDY);
-  skycons.add("day3", Skycons.RAIN);
-
+  
   // start animation!
   skycons.play();
   
   // want to change the icon? no problem:
-  skycons.set("today", Skycons.PARTLY_CLOUDY_NIGHT);
   
 /*
 Get value from Bootstrap dropdown menu
 */
 $('#dropdown li').on('click', function(){
     alert($(this).text());
+    getData($(this).text());
  
 });
-
-$(function () { 
-  var city="Taipei";
-  var weather, feed, title, content;
-  $.ajax({
+ var countCelsius= function(f){
+  
+   return Math.floor((f-32)*5/9);
+   
+    };  
+  
+ var rightSkycon= function(c, d){
+   if (c>0 && c<47 ){
+   skycons.add(d,Skycons.RAIN);
+   
+   
+   
+ }
+ };   
+var getData = function(city){
+  var weather, feed ;
+    $.ajax({
     
     method: "GET", 
-   url:'https://query.yahooapis.com/v1/public/yql',
+    url:'https://query.yahooapis.com/v1/public/yql',
     data: {
-           q: 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="' + city + '")',
-           format: 'json'
-         }, 
+    q: 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="' + city + '")',
+    format: 'json',
     
+         }, 
+      
     success: function (data) {  
       var weather = data.query.results.channel;
        var cityLo =  weather.item.condition.text;
+      
      
       console.log(weather);  
       console.log(cityLo);
-      $('.temperature').text(weather.wind.chill);
+       var celcius= countCelsius(weather.wind.chill);
+      
+      
+$('.temperature').text(celcius);
+   
+      
 $('.date').text(weather.lastBuildDate);
 $('#status').text(cityLo);         
-$('#1').text(weather.forecast.day);     
+$('#1').text(weather.item.forecast[1].date);  
+$('#2').text(weather.item.forecast[2].date);
+$('#3').text(weather.item.forecast[3].date);      
+
+rightSkycon(weather.item.forecast[1].code, 'day1'); 
+     
       
       
-    } 
-  }); 
+   }});
+  };    
+      
+$(function(){
+  getData('Taipei');
   
-  
-  
-  }); 
-
-
-  
-  
-  
-    
-   
+});
