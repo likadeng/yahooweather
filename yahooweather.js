@@ -17,6 +17,7 @@ Get value from Bootstrap dropdown menu
 $('#dropdown li').on('click', function(){
     alert($(this).text());
     getData($(this).text());
+    changeCity($(this).text());  
  
 });
  var countCelsius= function(f){
@@ -26,12 +27,33 @@ $('#dropdown li').on('click', function(){
     };  
   
  var rightSkycon= function(c, d){
-   if (c>0 && c<47 ){
-   skycons.add(d,Skycons.RAIN);
+   if (c>0 && c<15 ){
+   skycons.add(d,Skycons.RAIN);  
+ }else if (c>14 && c<20){
+   skycons.add(d,Skycons.SNOW);         
+           }
+  else if (c===18){
+   skycons.add(d,Skycons.SLEET);         
+           } 
+  else if (c===20){
+   skycons.add(d,Skycons.FOG);         
+           }  
+  else if (c>19 && c<26){
+   skycons.add(d,Skycons.WIND);         
+           } 
+  else if (c>25 && c<31){
+   skycons.add(d,Skycons.CLOUDY);         
+           }
+  else if (c>31 && c<35){
+   skycons.add(d,Skycons.CLEAR-DAY);         
+           }  
+  else if (c>25 && c<31|| c===36){
+   skycons.add(d,Skycons.CLOUDY);         
+           }  
+  else if (c>36 && c<48){
+   skycons.add(d,Skycons.SNOW);         
+           }  
    
-   
-   
- }
  };   
 var getData = function(city){
   var weather, feed ;
@@ -41,18 +63,19 @@ var getData = function(city){
     url:'https://query.yahooapis.com/v1/public/yql',
     data: {
     q: 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="' + city + '")',
-    format: 'json',
+    format: 'json'
+   
     
          }, 
       
     success: function (data) {  
       var weather = data.query.results.channel;
-       var cityLo =  weather.item.condition.text;
+      var cityLo =  weather.item.condition.text;
       
      
       console.log(weather);  
       console.log(cityLo);
-       var celcius= countCelsius(weather.wind.chill);
+      var celcius= countCelsius(weather.wind.chill);
       
       
 $('.temperature').text(celcius);
@@ -62,16 +85,26 @@ $('.date').text(weather.lastBuildDate);
 $('#status').text(cityLo);         
 $('#1').text(weather.item.forecast[1].date);  
 $('#2').text(weather.item.forecast[2].date);
-$('#3').text(weather.item.forecast[3].date);      
+$('#3').text(weather.item.forecast[3].date);  
+    var lowCelcius=countCelsius(weather.item.forecast[1].low);
+    var
+highCelcius=countCelsius(weather.item.forecast[1].high);    
+$('#rangeL1').text(lowCelcius);  
+$('#rangeH1').text(highCelcius);      
+      
+
+      
+      
 
 rightSkycon(weather.item.forecast[1].code, 'day1'); 
-     
-      
-      
+rightSkycon(weather.item.forecast[2].code, 'day2'); 
+rightSkycon(weather.item.forecast[1].code, 'day3');
+        
    }});
   };    
       
 $(function(){
-  getData('Taipei');
-  
+  getData('Taipei');  
 });
+
+
