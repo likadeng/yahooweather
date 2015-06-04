@@ -86,16 +86,27 @@ $('#status').text(cityLo);
 $('#1').text(weather.item.forecast[1].date);  
 $('#2').text(weather.item.forecast[2].date);
 $('#3').text(weather.item.forecast[3].date);  
-    var lowCelcius=countCelsius(weather.item.forecast[1].low);
+    var lowCelcius1=countCelsius(weather.item.forecast[1].low);
     var
-highCelcius=countCelsius(weather.item.forecast[1].high);    
-$('#rangeL1').text(lowCelcius);  
-$('#rangeH1').text(highCelcius);      
-      
+highCelcius1=countCelsius(weather.item.forecast[1].high);    
 
-      
-      
+    var      lowCelcius2=countCelsius(weather.item.forecast[2].low);
+    var
+highCelcius2=countCelsius(weather.item.forecast[2].high);       
 
+    var      lowCelcius3=countCelsius(weather.item.forecast[3].low);
+    var
+highCelcius3=countCelsius(weather.item.forecast[3].high);   
+      
+/*lowest to highest temparatures in future 3 days*/           
+$('#rangeL1').text(lowCelcius1);  
+$('#rangeH1').text(highCelcius1); 
+$('#rangeL2').text(lowCelcius2); 
+$('#rangeH2').text(highCelcius2);   
+$('#rangeL3').text(lowCelcius3); 
+$('#rangeH3').text(highCelcius3);       
+   
+/*skycon appear in future 3 days */
 rightSkycon(weather.item.forecast[1].code, 'day1'); 
 rightSkycon(weather.item.forecast[2].code, 'day2'); 
 rightSkycon(weather.item.forecast[1].code, 'day3');
